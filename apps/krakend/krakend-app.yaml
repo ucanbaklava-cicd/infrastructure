@@ -1,0 +1,23 @@
+# infra-repo/argocd-apps/krakend/krakend-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: krakend
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:your-github-username/infra-repo.git # Or HTTPS URL
+    path: argocd-apps/krakend # Path to the manifests within the repo
+    targetRevision: HEAD # Or main branch
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: krakend
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

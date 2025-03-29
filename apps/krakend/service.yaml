@@ -1,0 +1,19 @@
+# infra-repo/argocd-apps/krakend/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: krakend-service
+  namespace: krakend
+spec:
+  selector:
+    app: krakend
+  ports:
+    - protocol: TCP
+      port: 80 # External port
+      targetPort: 8080 # Port on the Krakend container
+  type: NodePort
+   ports:
+   - protocol: TCP
+     port: 80
+     targetPort: 8080
+     nodePort: 30000 # Example NodePort

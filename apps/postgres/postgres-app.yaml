@@ -1,0 +1,31 @@
+# infra-repo/argocd-apps/postgres/postgres-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgres
+  namespace: argocd # Deploy the Application CRD itself into argocd ns
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io # Ensures resources are deleted when App is deleted
+spec:
+  project: default # Or create a dedicated AppProject
+  source:
+    repoURL: https://charts.bitnami.com/bitnami # Helm repo URL
+    chart: postgresql
+    targetRevision: "12.x.x" # Use a specific chart version range
+    helm:
+      valueFiles:
+        - values.yaml # Reference the values file in the same directory (in Git)
+      # Alternatively, fetch values from the infra-repo itself:
+      # values: |
+      #   <paste content of values.yaml here if not using valueFiles>
+
+  destination:
+    server: https://kubernetes.default.svc # Target cluster URL (in-cluster)
+    namespace: database # Namespace to deploy postgres into
+
+  syncPolicy:
+    automated:
+      prune: true # Delete resources removed from Git
+      selfHeal: true # Re-sync if cluster state drifts from Git
+    syncOptions:
+      - CreateNamespace=true # Create the namespace if it doesn't exist

@@ -1,0 +1,51 @@
+# infra-repo/argocd-apps/krakend/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: krakend-config
+  namespace: krakend
+data:
+  krakend.json: |
+    {
+      "version": 3,
+      "port": 8080,
+      "endpoints": [
+        {
+          "endpoint": "/api/v1/hello",
+          "method": "GET",
+          "backend": [
+            {
+              "url_pattern": "/WeatherForecast", # Path on the backend service
+              "host": [
+                # Use K8s internal service DNS name
+                "http://dotnet-api-service.dotnet-app.svc.cluster.local:8080"
+              ],
+              "method": "GET"
+            }
+          ]
+        }
+        # Add more endpoints here
+        # Example: Keycloak OIDC validation (requires JWK endpoint)
+        # {
+        #   "endpoint": "/api/v1/secure",
+        #   "method": "GET",
+        #   "extra_config": {
+        #     "auth/validator": {
+        #       "alg": "RS256",
+        #       "jwk_url": "http://keycloak-http.keycloak.svc.cluster.local:8080/realms/master/protocol/openid-connect/certs", # Adjust realm if needed
+        #       "disable_jwk_security": true, # Set to false if Keycloak JWK URL is HTTPS
+        #       "roles_key": "realm_access.roles",
+        #       "roles": ["user"] # Example role check
+        #     }
+        #   },
+        #   "backend": [...] # Your secured backend
+        # }
+      ],
+      "extra_config": {
+         # Optional: Add CORS, logging, etc.
+         # "router": {
+         #    "logger": { "level": "DEBUG" },
+         #    "cors": { ... }
+         # }
+      }
+    }

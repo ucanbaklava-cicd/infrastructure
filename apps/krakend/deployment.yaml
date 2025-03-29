@@ -1,0 +1,28 @@
+# infra-repo/argocd-apps/krakend/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: krakend-deployment
+  namespace: krakend
+spec:
+  replicas: 1 # Adjust as needed
+  selector:
+    matchLabels:
+      app: krakend
+  template:
+    metadata:
+      labels:
+        app: krakend
+    spec:
+      containers:
+      - name: krakend
+        image: devopsfaith/krakend:latest # Use a specific version tag in production
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: krakend-config-volume
+          mountPath: /etc/krakend/
+      volumes:
+      - name: krakend-config-volume
+        configMap:
+          name: krakend-config

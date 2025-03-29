@@ -1,0 +1,24 @@
+auth:
+  adminUser: admin # Referenced from secret below
+  existingSecret: keycloak-admin-creds # Use manually created secret for admin
+
+externalDatabase:
+  enabled: true
+  host: postgres-postgresql.database.svc.cluster.local # Internal K8s DNS name
+  port: 5432
+  database: keycloak_db
+  user: keycloak_user # Must match the user created by the postgres chart/values
+  existingSecret: "keycloak-db-creds" # Secret containing the DB user/pass for Keycloak
+  existingSecretPasswordKey: "password"
+
+service:
+  type: NodePort
+    nodePorts:
+      http: 30080
+      https: 30443
+
+persistance:
+  enabled: false
+  size: 1Gi
+
+replicas: 1

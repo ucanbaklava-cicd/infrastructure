@@ -1,0 +1,29 @@
+# infra-repo/argocd-apps/keycloak/keycloak-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keycloak       # Name of this Argo CD Application
+  namespace: argocd   # Where this Application resource lives
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io # Cleanup hook
+spec:
+  project: default
+  source:
+    # Keycloak uses a Helm chart, unlike Krakend's raw manifests
+    repoURL: https://charts.bitnami.com/bitnami # Helm repo URL
+    chart: keycloak                             # Name of the Helm chart
+    targetRevision: "16.x.x"                    # Version of the Helm chart to use
+    helm:
+      valueFiles:                               # Tells Argo CD Helm how to configure the chart
+        - values.yaml                           # Points to infra-repo/argocd-apps/keycloak/values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc # Deploy to the same cluster as Argo CD
+    namespace: keycloak                    # Deploy Keycloak into the 'keycloak' namespace
+
+  syncPolicy:                              # Same automatic sync policy
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true               # Create the 'keycloak' namespace if needed

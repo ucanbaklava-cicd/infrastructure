@@ -1,0 +1,33 @@
+global:
+  postgresql:
+    auth:
+      # We use existing secrets created manually
+      existingSecret: postgres-creds
+      # Define database and user for Keycloak
+      database: keycloak_db
+      username: keycloak_user
+      passwordSecret: "keycloak-db-creds" # Secret containing keycloak DB user/pass
+      passwordSecretKey: "password" # Key within the secret for the password
+
+primary:
+  persistence:
+    enabled: true
+    size: 1Gi # Adjust size as needed
+    # storageClass: "your-rackspace-storage-class" # Optional: Specify if needed
+
+  # If using LoadBalancer service type for direct access (less common for DB)
+  # service:
+  #   type: LoadBalancer
+
+#  kubectl --kubeconfig=C:/Users/asus/Documents/ucanbaklava-kubeconfig.yaml create secret generic postgres-creds -n database \
+#   --from-literal=postgresql-password='123' \
+#   --from-literal=postgresql-postgres-password='123456'
+
+
+#   kubectl --kubeconfig=C:/Users/asus/Documents/ucanbaklava-kubeconfig.yaml  create secret generic keycloak-db-creds -n keycloak \
+#   --from-literal=username='admin' \
+#   --from-literal=password='YOUR_KEYCLOAK_DB_PASSWORD'
+
+#   kubectl --kubeconfig=C:/Users/asus/Documents/ucanbaklava-kubeconfig.yaml create secret generic keycloak-admin-creds -n keycloak \
+#   --from-literal=username='admin' \
+#   --from-literal=password='123456'
