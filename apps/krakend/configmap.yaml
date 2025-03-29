@@ -15,7 +15,7 @@ data:
           "method": "GET",
           "backend": [
             {
-              "url_pattern": "/WeatherForecast", # Path on the backend service
+              "url_pattern": "/WeatherForecast",
               "host": [
                 "http://dotnet-api-service.dotnet-app.svc.cluster.local:8080"
               ],
