@@ -1,0 +1,31 @@
+# infra-repo/argocd-apps/apps/dotnet-api-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dotnet-api
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/ucanbaklava-cicd/api.git # Or HTTPS
+    path: k8s # Directory containing the K8s manifests for this app
+    targetRevision: HEAD # Or main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dotnet-app # Deploy into the app's dedicated namespace
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true # Creates dotnet-app namespace if not present
+  # --- Image Updater Annotation (Optional but Recommended) ---
+  # Requires installing Argo CD Image Updater: https://argo-cd.readthedocs.io/en/stable/operator-manual/image-updater/
+  # metadata:
+  #   annotations:
+  #     argocd-image-updater.argoproj.io/image-list: ghcr.io/your-github-username/dotnet-api-repo:~0 # Watch tags matching semver (adjust pattern if needed, e.g., main-*)
+  #     argocd-image-updater.argoproj.io/write-back-method: git # Update the image tag in Git
+  #     argocd-image-updater.argoproj.io/git-branch: main # Branch to commit back to in dotnet-api-repo
+  #     argocd-image-updater.argoproj.io/update-strategy: latest # Use the newest tag matching the pattern
