@@ -9,8 +9,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@github.com:your-github-username/infra-repo.git # Or HTTPS URL
-    path: argocd-apps # Directory containing the *other* app yamls (postgres, keycloak, krakend)
+    repoURL: https://github.com/ucanbaklava-cicd/infrastructure.git # Or HTTPS URL
+    path: apps # Directory containing the *other* app yamls (postgres, keycloak, krakend)
                      # It will find *-app.yaml files within subdirectories too.
     targetRevision: HEAD # Or main
     # Use directory recurse if needed, but path matching usually works well.

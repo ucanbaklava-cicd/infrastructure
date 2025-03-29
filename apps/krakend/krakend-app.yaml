@@ -9,8 +9,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@github.com:your-github-username/infra-repo.git # Or HTTPS URL
-    path: argocd-apps/krakend # Path to the manifests within the repo
+    repoURL: https://github.com/ucanbaklava-cicd/infrastructure.git # Or HTTPS URL
+    path: apps/krakend # Path to the manifests within the repo
     targetRevision: HEAD # Or main branch
   destination:
     server: https://kubernetes.default.svc
